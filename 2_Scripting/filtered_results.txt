@@ -1,0 +1,3 @@
+Number of lines: 1
+Number of dots: 3
+Number of words starting with 'cfw': 0
