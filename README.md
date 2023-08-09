@@ -1,2 +1,2 @@
-# solo
+# sola
 k8s cluster
