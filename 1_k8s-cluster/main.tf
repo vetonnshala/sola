@@ -29,40 +29,40 @@ resource "azurerm_kubernetes_cluster" "aks" {
   node_resource_group = "${azurerm_resource_group.solaborate-rg.name}-aks"
   resource_group_name = azurerm_resource_group.solaborate-rg.name
 
-    oms_agent {
-      log_analytics_workspace_id = azurerm_log_analytics_workspace.insights.id
-    }
+  oms_agent {
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.insights.id
+  }
 
   default_node_pool {
-    availability_zones   = [1, 2, 3]
+    availability_zones   = [1, 2]
     enable_auto_scaling  = true
     max_count            = 3
     min_count            = 1
     name                 = "solapool1"
     orchestrator_version = data.azurerm_kubernetes_service_versions.current.latest_version
-    # os_disk_size_gb      = 1024
-    vm_size              = "Standard_DS2_v2"
+    os_disk_size_gb      = 1024
+    vm_size              = "Standard_D2_v2"
   }
 
   identity { type = "SystemAssigned" }
-
-  role_based_access_control_enabled = true 
+   ##enable AD on aks
+  role_based_access_control_enabled = true
 }
 
 resource "azurerm_windows_virtual_machine" "windows_vm" {
   name                  = "winsola"
   resource_group_name   = azurerm_resource_group.solaborate-rg.name
   location              = azurerm_resource_group.solaborate-rg.location
-  size                  = "Standard_DS2_v2"
+  size                  = "Standard_D2_v2"
   admin_username        = var.aad_admin_username
   admin_password        = var.admin_password
   network_interface_ids = [azurerm_network_interface.windows_vm_nic.id]
 
-  # os_disk {
-  #   name                 = "osdisk"
-  #   caching              = "ReadWrite"
-  #   storage_account_type = "Standard_LRS"
-  # }
+  os_disk {
+    name                 = "osdisk"
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
 
   source_image_reference {
     publisher = "MicrosoftWindowsServer"
@@ -72,6 +72,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   }
 }
 
+##enable AD on vm
 resource "azurerm_virtual_machine_extension" "aad_extension" {
   name                 = "aad-extension"
   virtual_machine_id   = azurerm_windows_virtual_machine.windows_vm.id

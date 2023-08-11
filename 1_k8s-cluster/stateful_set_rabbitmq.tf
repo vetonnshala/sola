@@ -1,11 +1,18 @@
+resource "kubernetes_service_account" "rabbitmq" {
+  metadata {
+    name      = "rabbitmq"
+    namespace = "default"
+  }
+}
+
 resource "kubernetes_stateful_set" "rabbitmq" {
   metadata {
     name      = "rabbitmq"
-    namespace = "rabbitmq-solaborate"
+    namespace = "default"
   }
 
   spec {
-    replicas = 2
+    replicas     = 2
     service_name = "rabbitmq-solaborate-service"
     selector {
       match_labels = {
@@ -18,15 +25,15 @@ resource "kubernetes_stateful_set" "rabbitmq" {
         labels = {
           app = "rabbitmq"
         }
-       
+
         annotations = {}
       }
 
       spec {
-        service_account_name = "rabbitmq"
+        service_account_name = "default"
         container {
-          name  = "rabbitmq"
-          image = "rabbitmq:latest"  
+          name              = "rabbitmq"
+          image             = "rabbitmq:latest"
           image_pull_policy = "IfNotPresent"
 
           args = [
@@ -98,6 +105,7 @@ resource "kubernetes_stateful_set" "rabbitmq" {
       }
     }
     
+    #update strategy for the pods
     update_strategy {
       type = "RollingUpdate"
       rolling_update {
@@ -107,7 +115,7 @@ resource "kubernetes_stateful_set" "rabbitmq" {
 
     volume_claim_template {
       metadata {
-        name = "prometheus-data"
+        name = "rabbitmq-data"
       }
 
       spec {
@@ -127,7 +135,7 @@ resource "kubernetes_stateful_set" "rabbitmq" {
 resource "kubernetes_service" "rabbitmq" {
   metadata {
     name      = "rabbitmq"
-    namespace = "rabbitmq-solaborate"
+    namespace = "default"
   }
 
   spec {
@@ -135,7 +143,7 @@ resource "kubernetes_service" "rabbitmq" {
       app = "rabbitmq"
     }
 
-   port {
+    port {
       port        = 5672
       target_port = 5672
     }

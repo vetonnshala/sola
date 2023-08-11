@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.13"
+  required_version = ">= 1.0"
   required_providers {
     # Azure Active Directory
     azuread = {
@@ -16,4 +16,7 @@ terraform {
 
 provider "azurerm" {
   features {}
+}
+provider "kubernetes" {
+  config_path = "~/.kube/config"
 }
