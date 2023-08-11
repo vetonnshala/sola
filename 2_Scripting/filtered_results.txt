@@ -1,0 +1,5 @@
+Number of lines: 1
+Number of dots: 3
+Number of words starting with 'cifw': 0
+Number of special characters: 3
+Average word length: 3
