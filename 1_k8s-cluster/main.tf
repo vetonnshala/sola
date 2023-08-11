@@ -38,9 +38,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     enable_auto_scaling  = true
     max_count            = 3
     min_count            = 1
-    name                 = "solaborate-pool"
+    name                 = "solapool1"
     orchestrator_version = data.azurerm_kubernetes_service_versions.current.latest_version
-    os_disk_size_gb      = 1024
+    # os_disk_size_gb      = 1024
     vm_size              = "Standard_DS2_v2"
   }
 
@@ -50,7 +50,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 
 resource "azurerm_windows_virtual_machine" "windows_vm" {
-  name                  = "windows-solaborate"
+  name                  = "winsola"
   resource_group_name   = azurerm_resource_group.solaborate-rg.name
   location              = azurerm_resource_group.solaborate-rg.location
   size                  = "Standard_DS2_v2"
@@ -58,16 +58,16 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   admin_password        = var.admin_password
   network_interface_ids = [azurerm_network_interface.windows_vm_nic.id]
 
-  os_disk {
-    name                 = "osdisk"
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
+  # os_disk {
+  #   name                 = "osdisk"
+  #   caching              = "ReadWrite"
+  #   storage_account_type = "Standard_LRS"
+  # }
 
   source_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
-    sku       = "2019-datacenter"
+    sku       = "2022-datacenter"
     version   = "latest"
   }
 }
@@ -97,7 +97,7 @@ PROTECTED_SETTINGS
 }
 
 resource "azurerm_network_interface" "windows_vm_nic" {
-  name                = "windows-nic-solaborate"
+  name                = "windowssolaborate"
   resource_group_name = azurerm_resource_group.solaborate-rg.name
   location            = azurerm_resource_group.solaborate-rg.location
 
