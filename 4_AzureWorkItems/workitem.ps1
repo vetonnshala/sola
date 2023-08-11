@@ -7,7 +7,7 @@ $reqUrl = 'https://dev.azure.com/vettonshalaa/solaborate/_apis/wit/workitems/1?a
 
 $response = Invoke-RestMethod -Uri $reqUrl -Method Get -Headers $headers
 
-# Check if the workitemtype is "Task"
+# Check if the workitemtype is "Bug"
 if ($response.fields."System.WorkItemType" -eq "Bug") {
     Write-Host "Work item type is 'Bug'"
     $response | ConvertTo-Json
